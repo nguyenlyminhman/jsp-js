@@ -33,7 +33,7 @@ function limit(){
 }
 //------------------------------------------------
  var ok = 0;
- 
+ var checkNo = limit()-1;
 <% no = 0; %> 
 <% for ( DemoBean demo : a ){ ++no; %>
 	<%String func = "function nyukai".concat(no + "(){"); %>
@@ -41,17 +41,28 @@ function limit(){
 		var id = document.getElementById("<%=demo.getId()%>");
 		var id_value = document.getElementById("<%=demo.getId()%>").value;
 		if(id.checked === true && id_value === 'all'){
-			ok--;
+			ok = 0;
+			//checkNo = limit()-1;
 			<%for ( DemoBean demo1 : a ){ %>
 				document.getElementById('<%=demo1.getId()%>').checked = true;
 			<%}%>
 		}else if (id.checked === false && id_value === 'all'){
-			ok--;
+			ok = 0;
+			//checkNo = limit()-1;
 			<%for ( DemoBean demo1 : a ){ %>
 				document.getElementById('<%=demo1.getId()%>').checked = false;
 			<%}%>
+		}else if(id.checked === true && id_value !== 'all'){
+			ok++;
+			//checkNo--;
+			console.log("ok++ " + ok + ", checkNo-- " + checkNo)
+			if(ok ===  (limit()-1) || ok == 0){
+				document.getElementById("all").checked = true
+			}
 		}else if(id.checked === false && id_value !== 'all'){
 			ok--;
+			//checkNo++;
+			console.log("ok-- " + ok + ", checkNo++ " + checkNo)
 			<%for ( DemoBean demo1 : a ){ %>
 				id.checked = false
 				document.getElementById('all').checked = false;
@@ -59,13 +70,7 @@ function limit(){
 					document.getElementById('<%=demo1.getId()%>').checked = false;
 				}
 			<%}%>
-		}else if(id.checked === true && id_value !== 'all'){
-			ok++;
-			console.log("limit: " + (limit() - 1));
-			if(ok ===  (limit()-1) ){
-				document.getElementById('all').checked = true;
-			}
-	} 
+		}
 	<%="}" %>
 <%} %>
 	
